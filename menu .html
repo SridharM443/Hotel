@@ -1,59 +1,164 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>
-            Leela Hotel Menu
-        </title>
+        <title>Leela Hotel Menu</title>
         <link rel="stylesheet" href="menustyle.css">
     </head>
-
     <body>
+        <!-- Menu Items -->
         <div class="container">
             <img class="dly" src="imag/idly.jpg">
-            <p>
-                Dish : Idly<br>
-                Price: Rs.5/nos
-            </p>
+            <p>Dish: Idly<br>Price: Rs.5/nos</p>
+            <div class="controls">
+                <button onclick="decrease('idly')">-</button>
+                <input type="number" id="idly" value="0" readonly>
+                <button onclick="increase('idly')">+</button>
+            </div>
         </div>
+
         <div class="container">
             <img class="dosai" src="imag/dosa.jpg">
-            <p>
-                Dish : Dosa<br>
-                Price: Rs.10/nos
-            </p>
+            <p>Dish: Dosa<br>Price: Rs.10/nos</p>
+            <div class="controls">
+                <button onclick="decrease('dosa')">-</button>
+                <input type="number" id="dosa" value="0" readonly>
+                <button onclick="increase('dosa')">+</button>
+            </div>
         </div>
+
         <div class="container">
             <img class="poori" src="imag/poori.jpg">
-            <p>
-                Dish : Poori<br>
-                Price: Rs.10/nos
-            </p>
+            <p>Dish: Poori<br>Price: Rs.10/nos</p>
+            <div class="controls">
+                <button onclick="decrease('poori')">-</button>
+                <input type="number" id="poori" value="0" readonly>
+                <button onclick="increase('poori')">+</button>
+            </div>
         </div>
+
         <div class="container">
             <img class="vada" src="imag/vada.jpg">
-            <p>
-                Dish : Vada<br>
-                Price: Rs.5/nos
-            </p>
+            <p>Dish: Vada<br>Price: Rs.5/nos</p>
+            <div class="controls">
+                <button onclick="decrease('vada')">-</button>
+                <input type="number" id="vada" value="0" readonly>
+                <button onclick="increase('vada')">+</button>
+            </div>
         </div>
+
         <div class="container">
             <img class="halfboil" src="imag/halfboil.jpg">
-            <p>
-                Dish : Half-Boil<br>
-                Price: Rs.15/nos
-            </p>
+            <p>Dish: Half-Boil<br>Price: Rs.15/nos</p>
+            <div class="controls">
+                <button onclick="decrease('halfboil')">-</button>
+                <input type="number" id="halfboil" value="0" readonly>
+                <button onclick="increase('halfboil')">+</button>
+            </div>
         </div>
+
         <div class="container">
             <img class="pon" src="imag/pogalno.jpg">
-            <p> Dish : Pongal <br> Price : Rs.15/cup </p>
+            <p>Dish: Pongal<br>Price: Rs.15/cup</p>
+            <div class="controls">
+                <button onclick="decrease('pongal')">-</button>
+                <input type="number" id="pongal" value="0" readonly>
+                <button onclick="increase('pongal')">+</button>
+            </div>
         </div>
+
         <div class="container">
             <img class="omel" src="imag/omelleteno.jpg">
-            <p> Dish : Omelette <br> Price :Rs.15/nos</p>
+            <p>Dish: Omelette<br>Price: Rs.15/nos</p>
+            <div class="controls">
+                <button onclick="decrease('omelette')">-</button>
+                <input type="number" id="omelette" value="0" readonly>
+                <button onclick="increase('omelette')">+</button>
+            </div>
         </div>
+
         <div class="container">
             <img class="oni" src="imag/onionno.jpg">
-            <p>Dish : Dish :Onion Dosa <br> Price :2Rs.20/nos</p>
+            <p>Dish: Onion Dosa<br>Price: Rs.20/nos</p>
+            <div class="controls">
+                <button onclick="decrease('onion_dosa')">-</button>
+                <input type="number" id="onion_dosa" value="0" readonly>
+                <button onclick="increase('onion_dosa')">+</button>
+            </div>
         </div>
+
+        <!-- Generate Bill Button -->
+        <div id="bill-section">
+            <button id="generate-bill" onclick="generateBill()">Generate Bill</button>
+        </div>
+
+        <script>
+            const prices = {
+                idly: 5,
+                dosa: 10,
+                poori: 10,
+                vada: 5,
+                halfboil: 15,
+                pongal: 15,
+                omelette: 15,
+                onion_dosa: 20,
+            };
+
+            const quantities = {};
+
+            for (const dish in prices) {
+                quantities[dish] = 0;
+            }
+
+            function increase(dish) {
+                quantities[dish]++;
+                document.getElementById(dish).value = quantities[dish];
+            }
+
+            function decrease(dish) {
+                if (quantities[dish] > 0) {
+                    quantities[dish]--;
+                    document.getElementById(dish).value = quantities[dish];
+                }
+            }
+
+            function generateBill() {
+                let billDetails = "";
+                let total = 0;
+
+                for (const dish in quantities) {
+                    if (quantities[dish] > 0) {
+                        const itemTotal = quantities[dish] * prices[dish];
+                        billDetails += `${dish.charAt(0).toUpperCase() + dish.slice(1)}: ${quantities[dish]} x Rs.${prices[dish]} = Rs.${itemTotal}<br>`;
+                        total += itemTotal;
+                    }
+                }
+
+                const billPage = `
+                    <html>
+                    <head>
+                        <title>Leela Hotel Bill</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; text-align: center; margin: 50px; }
+                            h1 { color: #333; }
+                            p { margin: 10px 0; }
+                            .bill { margin-top: 20px; padding: 20px; border: 1px solid #ccc; }
+                            .total { font-weight: bold; margin-top: 20px; }
+                        </style>
+                    </head>
+                    <body>
+                        <h1>Leela Hotel</h1>
+                        <div class="bill">
+                            ${billDetails || "No items selected."}
+                            <p class="total">Total Amount: Rs. ${total}</p>
+                        </div>
+                    </body>
+                    </html>
+                `;
+
+                const newWindow = window.open("", "_blank");
+                newWindow.document.write(billPage);
+                newWindow.document.close();
+            }
+        </script>
     </body>
 </html>
